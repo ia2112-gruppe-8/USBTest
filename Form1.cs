@@ -45,15 +45,15 @@ namespace USBTest
         {
             ask();
         }
-        void ask()
+        void ask()//sender 1 til arduino for å spørre om data, og mottar stringen og deler den opp ved skilletegn ';' og laster inn i array
         {
             string message;
             port.Write("1");
             message = port.ReadLine();
             values = message.Split(';');
-            txtTemp.Text = $"{values[0]}°C";
-            txtPot.Text = values[1];
-            txtAlarm.Text = values[2];
+            txtTemp.Text = $"{values[0]}°C";//Temp
+            txtPot.Text = values[1];//Potmeter verdi
+            txtAlarm.Text = values[2];//AlarmBit
         }
 
         private void button1_Click(object sender, EventArgs e)
