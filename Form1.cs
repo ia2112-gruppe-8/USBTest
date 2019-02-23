@@ -13,7 +13,6 @@ namespace USBTest
 {
     public partial class Form1 : Form
     {
-        SerialPort port;
         string[] values;
         AlarmWatcher pot = new AlarmWatcher(500, 700,AlarmType.Temp);
         ArduinoCom Arduino; 
@@ -25,8 +24,12 @@ namespace USBTest
             Arduino = new ArduinoCom(/*comboBox1.Text,*/ 9600);
             Arduino.LoadPortsInComboBox(comboBox1);
             this.FormClosed += new FormClosedEventHandler(Form1_FormClosed);
+            Arduino.usbTimeout += new EventHandler(usbTimeout);
         }
-        
+       private void usbTimeout(object kilde, EventArgs e)
+        {
+            timer1.Stop();
+        }
        /* void loadPorts()
         {
             string[] portNames = SerialPort.GetPortNames();
@@ -38,9 +41,9 @@ namespace USBTest
         }*/
         void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if(port != null && port.IsOpen)
+            if(Arduino != null && Arduino.IsOpen)
             {
-                port.Close();
+                Arduino.Close();
             }
         }
 
@@ -89,4 +92,5 @@ namespace USBTest
         Movement,
         Batteri
     }
+    
 }
