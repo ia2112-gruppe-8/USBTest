@@ -85,6 +85,13 @@ namespace USBTest
                     MessageBox.Show(ex.Message);
                 }
             }
+            else
+            {
+                port.Close();
+                port.PortName = this.ComPort;
+                
+            }
+
             if (!port.IsOpen)//Hvis porten er lukket
             {
                 try
