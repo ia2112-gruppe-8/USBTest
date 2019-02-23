@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Forms;
+using System.Management;
 
 namespace USBTest
 {
@@ -22,11 +23,21 @@ namespace USBTest
 
         public string[] getValues()
         {
-            string[] values;
+            string[] values = new string[3];
             string message;
+            if (port.IsOpen)
+            {
             port.Write("1");
             message = port.ReadLine();
             values = message.Split(';');
+            }
+            else
+            {
+                for (int i = 1; i <= values.Length; i++)
+                {
+                    values[i - 1] = "9999";
+                }
+            }
             return values;
         }
         public void LoadPortsInComboBox(ComboBox cbo)
@@ -40,10 +51,21 @@ namespace USBTest
         }
         public void OpenCom()
         {
-            if(port == null)
+            if(port == null)// Hvis port ikke inneholder et objekt
             {
                 port = new SerialPort(ComPort, BaudRate);
-                port.Open();
+            }
+            if (!port.IsOpen)//Hvis porten er lukket
+            {
+                try
+                {
+                port.Open();//Åpne porten
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }
