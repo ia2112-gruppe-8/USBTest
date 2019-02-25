@@ -11,19 +11,25 @@ namespace USBTest
         int LowLimit, HighLimit;
         private bool AlarmLastScan;
         bool AlarmBit, limitBit;
-        AlarmType Type { get; set; }
+        public AlarmType Type { get; set; }
+        public event EventHandler alarmTriggered;
+        
         public AlarmWatcher(int lowLimit, int highLimit,AlarmType type)
         {
             LowLimit = lowLimit;
             HighLimit = highLimit;
             Type = type;
         }
-        public bool updateAlarm(int value)
+        public void updateAlarm(int value)
         {
             if (checkLimits(value))
             {
                 limitBit = true;
                 AlarmBit = sendAlarm();
+                if (AlarmBit)
+                {
+                    alarmTriggered(this, new EventArgs());
+                }
             }
             else
             {
@@ -31,7 +37,7 @@ namespace USBTest
                 limitBit = false;
             }
             AlarmLastScan = limitBit;
-            return AlarmBit;
+            
         }
         private bool checkLimits(int value)
         {
