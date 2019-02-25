@@ -96,7 +96,8 @@ namespace USBTest
     {
         Temp,
         Movement,
-        Batteri
+        Batteri,
+        Fire
     }
     
 }
