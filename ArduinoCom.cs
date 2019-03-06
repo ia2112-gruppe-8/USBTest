@@ -12,27 +12,15 @@ namespace USBTest
     class ArduinoCom:SerialPort
     {
         public event EventHandler usbTimeout;
-        //public string ComPort { get; set; }
-        //int BaudRate { get; set; }
-        //public SerialPort port;
         ComboBox cbo;
         public ArduinoCom(int baudRate, ComboBox comboBox)
         {
             cbo = comboBox;
             LoadPortsInComboBox(cbo);
             BaudRate = baudRate;
-            WriteTimeout = 500;
+            WriteTimeout = 500;//Timeout for å skrive til seriellporten
+            ReadTimeout = 500;//Timeout for å lese til seriellporten
         }
-        
-        //public bool IsOpen
-        //{
-          //  get { return port.IsOpen; }
-        //}
-       // public void Close()
-        //{
-            //port.Close();
-        //}
-
         public string[] getValues()
         {
             string[] values = new string[3];
@@ -60,7 +48,6 @@ namespace USBTest
             }
             return values;
         }
-
         public void LoadPortsInComboBox(ComboBox cbo)
         {
             string[] portNames = GetPortNames();
@@ -71,31 +58,8 @@ namespace USBTest
             }
             cbo.SelectedIndex = 0;
         }
-
         public void OpenCom()
         {
-            #region Gammel Kode
-            /*if(port == null)// Hvis port ikke inneholder et objekt
-            {
-                try
-                {
-                port = new SerialPort(ComPort, BaudRate);
-                    port.WriteTimeout = 500;
-                    
-                }
-                catch (Exception ex)
-                {
-                   MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                port.Close();
-                port.PortName = this.ComPort;
-                
-            }*/
-            #endregion
-
             if (!IsOpen)//Hvis porten er lukket
             {
                 try
