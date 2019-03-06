@@ -53,7 +53,7 @@ namespace USBTest
             {
                 for (int i = 1; i <= values.Length; i++)
                 {
-                    values[i - 1] = "0000";
+                    values[i - 1] = null;
                 }
             }
             return values;
