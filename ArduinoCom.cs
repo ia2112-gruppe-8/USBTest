@@ -9,39 +9,29 @@ using System.Management;
 
 namespace USBTest
 {
-    class ArduinoCom
+    class ArduinoCom:SerialPort
     {
         public event EventHandler usbTimeout;
-        public string ComPort { get; set; }
-        int BaudRate { get; set; }
-       public SerialPort port;
-        
-        public ArduinoCom(int baudRate)
+        ComboBox cbo;
+        public ArduinoCom(int baudRate, ComboBox comboBox)
         {
+            cbo = comboBox;
+            LoadPortsInComboBox(cbo);
             BaudRate = baudRate;
+            WriteTimeout = 500;//Timeout for å skrive til seriellporten
+            ReadTimeout = 500;//Timeout for å lese til seriellporten
         }
-        
-        public bool IsOpen
-        {
-            get { return port.IsOpen; }
-        }
-        public void Close()
-        {
-            port.Close();
-        }
-
         public string[] getValues()
         {
             string[] values = new string[3];
             string message;
-            if (port.IsOpen)
+            if (IsOpen)
             {
                 try
                 {
-            port.Write("1");
-            message = port.ReadLine();
-            values = message.Split(';');
-
+                    Write("1");
+                    message = ReadLine();
+                    values = message.Split(';');
                 }
                 catch (Exception ex)
                 {
@@ -58,10 +48,9 @@ namespace USBTest
             }
             return values;
         }
-
         public void LoadPortsInComboBox(ComboBox cbo)
         {
-            string[] portNames = SerialPort.GetPortNames();
+            string[] portNames = GetPortNames();
             cbo.Items.Clear();
             foreach (string port in portNames)
             {
@@ -69,16 +58,14 @@ namespace USBTest
             }
             cbo.SelectedIndex = 0;
         }
-
         public void OpenCom()
         {
-            if(port == null)// Hvis port ikke inneholder et objekt
+            if (!IsOpen)//Hvis porten er lukket
             {
                 try
                 {
-                port = new SerialPort(ComPort, BaudRate);
-                    port.WriteTimeout = 500;
-                    
+                    PortName = cbo.Text;
+                Open();//Åpne porten
                 }
                 catch (Exception ex)
                 {
@@ -87,23 +74,9 @@ namespace USBTest
             }
             else
             {
-                port.Close();
-                port.PortName = this.ComPort;
-                
-            }
-
-            if (!port.IsOpen)//Hvis porten er lukket
-            {
-                try
-                {
-                   
-                port.Open();//Åpne porten
-                    
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                Close();
+                PortName = cbo.Text;
+                Open();
             }
         }
         
