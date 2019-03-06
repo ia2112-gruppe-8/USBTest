@@ -17,7 +17,8 @@ namespace USBTest
         AlarmWatcher pot = new AlarmWatcher(500, 700,AlarmType.Temp);
         ArduinoCom Arduino; 
         bool potAlarm;
-
+        int test = 1;
+        
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +26,8 @@ namespace USBTest
             Arduino.LoadPortsInComboBox(comboBox1);
             this.FormClosed += new FormClosedEventHandler(Form1_FormClosed);
             Arduino.usbTimeout += new EventHandler(usbTimeout);
+            pot.alarmTriggered += new EventHandler(potTrigged);
+            
         }
        private void usbTimeout(object kilde, EventArgs e)
         {
@@ -51,16 +54,19 @@ namespace USBTest
         {
             values = Arduino.getValues();
             WriteValues();
-            potAlarm = pot.updateAlarm(Convert.ToInt32(values[1]));
-            if (potAlarm)
-            {
-                checkBox1.Checked = true;
-            }
-            else
-            {
-                checkBox1.Checked = false;
+            pot.updateAlarm(Convert.ToInt32(values[1]));
+        }
+        private void potTrigged(object kilde,EventArgs e)
+        {
 
-            }
+            //potAlarm = 
+
+            //checkBox1.Checked = true;
+            //checkBox1.Checked = false;
+            textBox1.Text = pot.Type.ToString();/*$"Hei {test}";*/
+                //test += 1;
+
+
         }
         /*void ask()//sender 1 til arduino for å spørre om data, og mottar stringen og deler den opp ved skilletegn ';' og laster inn i array
         {
@@ -90,7 +96,8 @@ namespace USBTest
     {
         Temp,
         Movement,
-        Batteri
+        Batteri,
+        Fire
     }
     
 }
