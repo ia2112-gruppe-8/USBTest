@@ -22,8 +22,8 @@ namespace USBTest
         public Form1()
         {
             InitializeComponent();
-            Arduino = new ArduinoCom(/*comboBox1.Text,*/ 9600);
-            Arduino.LoadPortsInComboBox(comboBox1);
+            Arduino = new ArduinoCom(9600,comboBox1);
+            //Arduino.LoadPortsInComboBox(comboBox1);
             this.FormClosed += new FormClosedEventHandler(Form1_FormClosed);
             Arduino.usbTimeout += new EventHandler(usbTimeout);
             pot.alarmTriggered += new EventHandler(potTrigged);
@@ -87,7 +87,7 @@ namespace USBTest
         private void button1_Click(object sender, EventArgs e)
         {
             //Arduino = new ArduinoCom(com
-            Arduino.ComPort = comboBox1.Text;
+            //Arduino.ComPort = comboBox1.Text;
             Arduino.OpenCom();
                 timer1.Start();
         }

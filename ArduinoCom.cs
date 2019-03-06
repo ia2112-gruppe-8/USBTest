@@ -9,39 +9,41 @@ using System.Management;
 
 namespace USBTest
 {
-    class ArduinoCom
+    class ArduinoCom:SerialPort
     {
         public event EventHandler usbTimeout;
-        public string ComPort { get; set; }
-        int BaudRate { get; set; }
-       public SerialPort port;
-        
-        public ArduinoCom(int baudRate)
+        //public string ComPort { get; set; }
+        //int BaudRate { get; set; }
+        //public SerialPort port;
+        ComboBox cbo;
+        public ArduinoCom(int baudRate, ComboBox comboBox)
         {
+            cbo = comboBox;
+            LoadPortsInComboBox(cbo);
             BaudRate = baudRate;
+            WriteTimeout = 500;
         }
         
-        public bool IsOpen
-        {
-            get { return port.IsOpen; }
-        }
-        public void Close()
-        {
-            port.Close();
-        }
+        //public bool IsOpen
+        //{
+          //  get { return port.IsOpen; }
+        //}
+       // public void Close()
+        //{
+            //port.Close();
+        //}
 
         public string[] getValues()
         {
             string[] values = new string[3];
             string message;
-            if (port.IsOpen)
+            if (IsOpen)
             {
                 try
                 {
-            port.Write("1");
-            message = port.ReadLine();
-            values = message.Split(';');
-
+                    Write("1");
+                    message = ReadLine();
+                    values = message.Split(';');
                 }
                 catch (Exception ex)
                 {
@@ -61,7 +63,7 @@ namespace USBTest
 
         public void LoadPortsInComboBox(ComboBox cbo)
         {
-            string[] portNames = SerialPort.GetPortNames();
+            string[] portNames = GetPortNames();
             cbo.Items.Clear();
             foreach (string port in portNames)
             {
@@ -72,7 +74,8 @@ namespace USBTest
 
         public void OpenCom()
         {
-            if(port == null)// Hvis port ikke inneholder et objekt
+            #region Gammel Kode
+            /*if(port == null)// Hvis port ikke inneholder et objekt
             {
                 try
                 {
@@ -82,7 +85,7 @@ namespace USBTest
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                   MessageBox.Show(ex.Message);
                 }
             }
             else
@@ -90,20 +93,26 @@ namespace USBTest
                 port.Close();
                 port.PortName = this.ComPort;
                 
-            }
+            }*/
+            #endregion
 
-            if (!port.IsOpen)//Hvis porten er lukket
+            if (!IsOpen)//Hvis porten er lukket
             {
                 try
                 {
-                   
-                port.Open();//Åpne porten
-                    
+                    PortName = cbo.Text;
+                Open();//Åpne porten
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
+            }
+            else
+            {
+                Close();
+                PortName = cbo.Text;
+                Open();
             }
         }
         
