@@ -79,7 +79,5 @@ namespace USBTest
                 Open();
             }
         }
-        
-        
     }
 }
